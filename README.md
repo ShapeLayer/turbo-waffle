@@ -30,6 +30,14 @@ That's Github's suggestion.
 
 ## Troubleshooting
 
+**Could not find Chrome**
+
+```
+Error: Could not find Chrome (ver. **). This can occur if either
+ 1. you did not perform an installation before running the script (e.g. `npm install`) or
+ 2. your cache path is incorrectly configured (which is: **).
+```
+
 ```sh
 node node_modules/puppeteer/install.js
 ```
