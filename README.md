@@ -6,7 +6,7 @@ Editorial Builder for the editorial of "2023 PIMM Algorithm Party"
 
 This is a code written in a hurry with a short time. I cannot guarantee that it will always work in all environments. (Test Execution Environment: Github Codespaces with default configurations)
 
-## Install dependencies
+## Preparing Execution Environment
 
 ```sh
 npm install
