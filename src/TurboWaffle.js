@@ -7,6 +7,7 @@ import { Templates } from './modules/Template/templateController.js'
 import { TemplateRenderer } from './modules/Template/templateRenderer.js'
 import { PDFWrapper } from './modules/PDFWrapper/pdfWrapper.js'
 import { pageBreaker } from './utils/htmlElements.js'
+import { writeFile } from 'fs/promises'
 
 class TurboWaffle {
   static defaults = {
@@ -15,7 +16,8 @@ class TurboWaffle {
         baseLayoutName: 'base',
         renderDocument: {
           compression: true
-        }
+        },
+        writeHTMLOutput: false
       },
       output: {
         writeOutputFilename: 'output.pdf'
@@ -77,8 +79,11 @@ class TurboWaffle {
     for (const doc of documents) {
       if (!doc instanceof Document)
         throw new Error('`documents` is must be list of `Document` instances.')
-      const _layoutRenderedEachDoc = await this._renderDoc__layout(doc)
+      const _layoutRenderedEachDoc = await this._renderDoc__layout(doc, options)
       
+      if (options.writeHTMLOutput === true) {
+        writeFile(`rendered_${doc.title}.html`, _layoutRenderedEachDoc)
+      }
 
       // Compress compatible layouts
       if (_options.compression && _options.compression === true) {
@@ -111,8 +116,8 @@ class TurboWaffle {
       await this._renderDoc__layout(document)
     )
   }
-  _renderDoc__layout = async (document) => {
-    return TemplateRenderer.render(document)
+  _renderDoc__layout = async (document, options) => {
+    return TemplateRenderer.render(document, options)
   }
   _renderDoc__base = async (layoutRendered) => {
     return TemplateRenderer.render(
