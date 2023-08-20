@@ -4,9 +4,9 @@ Editorial Builder for the editorial of "2023 PIMM Algorithm Party"
 
 **Notice**
 
-This is a code written in a hurry in a short time. I cannot guarantee that it will always work in all environments. (Test Execution Environment: Github Codespaces with default configurations)
+This is a code written in a hurry with a short time. I cannot guarantee that it will always work in all environments. (Test Execution Environment: Github Codespaces with default configurations)
 
-## Install dependencies
+## Preparing Execution Environment
 
 ```sh
 npm install
@@ -15,7 +15,7 @@ npm link
 
 ## Run
 
-Enter the command below in a repository that has a folder and file structure supported by Turbo Waffle.
+Enter the command below in a repository that has a folder and file structure that supports Turbo Waffle.
 
 Detailed folder structure specifications will be updated later.
 
