@@ -8,7 +8,6 @@ class TemplateRenderer {
     config: {
       preRender: {
         staticAssets: {
-          replacer: '##_STATIC_REPLACER_##',
           path: '_static'
         }
       }
@@ -16,9 +15,6 @@ class TemplateRenderer {
   }
 
   static _preRender = (document, options={}) => {
-    const staticReplacer = (options.staticAssets && options.staticAssets.replacer) ? options.staticAssets.replacer : TemplateRenderer.defaults.config.preRender.staticAssets.replacer
-    const staticPath = (options.staticAssets && options.staticAssets.path) ? options.staticAssets.path : TemplateRenderer.defaults.config.preRender.staticAssets.path
-    document.context.content = document.context.content.replace(staticReplacer, path.join(path.resolve(), staticPath))
     return document
   }
   static render = (document, options={}) => {

@@ -107,6 +107,9 @@ class TurboWaffle {
     for (const each of layoutRendered) {
       baseRendered.push(await this._renderDoc__base(each))
     }
+    if (options.writeHTMLOutput === true) {
+      writeFile(`rendered_merged.html`, baseRendered.join(''))
+    }
     return baseRendered
   }
   renderDocument = async (document, options = {}) => {

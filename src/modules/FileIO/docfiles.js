@@ -12,8 +12,12 @@ class DocumentLoader {
       options: {
         noHeaderId: true,
         ghCompatibleHeaderId: true,
-        metadata: true
+        metadata: true,
+        tables: true
       }
+    },
+    regex: {
+      image: /!\[(.*?)\]\((?<src>.*?)\)/g
     }
   }
 
@@ -24,6 +28,23 @@ class DocumentLoader {
     return await readdir(path.join(path.resolve(), RequiredFiles.requiredPaths.docs))
   }
   
+  static _renderImage = async (content) => {
+    const matches = [...content.matchAll(DocumentLoader.defaults.regex.image)]
+    for (const each of matches) {
+      const full = each[0]
+      const imgPath = each.groups.src
+      const base64Code = await readFile(path.join(path.resolve(), imgPath), 'base64')
+      const tag = `<img src="data:image/jpeg;base64,${base64Code}" />`
+      content = content.replace(full, tag)
+    }
+    return content
+  }
+
+  static _postLoadContent = async (content) => {
+    content = await DocumentLoader._renderImage(content)
+    return content
+  }
+
   static loadDocumentInstance = async (filename, options = {}) => {
     if (!RequiredFiles.requiredExists.docs)
       throw new Error(`Document directory (${RequiredFiles.requiredPaths.docs}) is not exists.`)
@@ -39,7 +60,8 @@ class DocumentLoader {
 
     // Load file
     const filepath = path.join(path.resolve(), RequiredFiles.requiredPaths.docs, filename)
-    const fileContent = await readFile(filepath, { encoding: 'utf8' })
+    let fileContent = await readFile(filepath, { encoding: 'utf8' })
+    fileContent = await DocumentLoader._postLoadContent(fileContent)
 
     // Convert
     const converter = new showdown.Converter(_options)
