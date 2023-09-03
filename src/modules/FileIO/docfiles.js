@@ -4,7 +4,7 @@ import { readFile, readdir } from 'node:fs/promises'
 import showdown from 'showdown'
 import { RequiredFiles } from './fileIO.js'
 import { Document } from '../../classes/document.js'
-import { entityCharToNormalChar } from '../../../../legacy/src/string.js'
+import { entityCharToNormalChar } from '../../utils/string.js'
 
 class DocumentLoader {
   static defaults = {
