@@ -2,6 +2,7 @@
 import nunjucks from 'nunjucks'
 import path from 'path'
 import { Document } from '../../classes/document.js'
+import { readFileSync } from 'node:fs'
 
 class TemplateRenderer {
   static defaults = {

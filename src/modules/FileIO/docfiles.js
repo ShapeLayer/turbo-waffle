@@ -17,7 +17,7 @@ class DocumentLoader {
       }
     },
     regex: {
-      image: /!\[(.*?)\]\((?<src>.*?)\)/g
+      image: /!\[(.*?)\]\((?<src>.*?)\)(\{(?<style>.*?)\})?/g
     }
   }
 
@@ -33,8 +33,9 @@ class DocumentLoader {
     for (const each of matches) {
       const full = each[0]
       const imgPath = each.groups.src
+      const style = each.groups.style || ''
       const base64Code = await readFile(path.join(path.resolve(), imgPath), 'base64')
-      const tag = `<img src="data:image/jpeg;base64,${base64Code}" />`
+      const tag = `<p class="img-wrapper"><img style="${style}" src="data:image/jpeg;base64,${base64Code}" /></p>`
       content = content.replace(full, tag)
     }
     return content
@@ -63,6 +64,12 @@ class DocumentLoader {
     let fileContent = await readFile(filepath, { encoding: 'utf8' })
     fileContent = await DocumentLoader._postLoadContent(fileContent)
 
+    if (filename.split('.').slice(-1).pop() === 'html') {
+      const doc = new Document(Document.htmlContext, fileContent)
+      doc.context.body = doc.context.content
+      return doc
+    }
+    
     // Convert
     const converter = new showdown.Converter(_options)
     const content = converter.makeHtml(fileContent)

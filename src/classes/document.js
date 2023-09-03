@@ -10,6 +10,17 @@ class Document {
     body: ''
   }
 
+  static config = {
+    htmlDocumentIdentifier: '##_HTML_DOCUMENT_##'
+  }
+
+  static htmlContext = {
+    title: Document.htmlDocumentIdentifier,
+    layoutName: Document.htmlDocumentIdentifier,
+    tags: [],
+    body: ''
+  }
+
   constructor (context, content) {
     this.context = context
     this.context.content = content

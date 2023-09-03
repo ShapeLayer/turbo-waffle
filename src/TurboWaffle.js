@@ -79,7 +79,9 @@ class TurboWaffle {
     for (const doc of documents) {
       if (!doc instanceof Document)
         throw new Error('`documents` is must be list of `Document` instances.')
-      const _layoutRenderedEachDoc = await this._renderDoc__layout(doc, options)
+
+      const _layoutRenderedEachDoc = doc.layoutName !== Document.htmlDocumentIdentifier ? await this._renderDoc__layout(doc, options) : doc.context.content
+      doc.body = _layoutRenderedEachDoc
       
       if (options.writeHTMLOutput === true) {
         writeFile(`rendered_${doc.title}.html`, _layoutRenderedEachDoc)
@@ -87,25 +89,29 @@ class TurboWaffle {
 
       // Compress compatible layouts
       if (_options.compression && _options.compression === true) {
-        if (previousLayout && doc.layout.compatibles.includes(previousLayout)) {
+        if (doc.layoutName === Document.htmlDocumentIdentifier) {
+          layoutRendered.push(doc)
+        } else if (previousLayout && doc.layout.compatibles.includes(previousLayout)) {
           const peekIdx = layoutRendered.length - 1
-          layoutRendered[peekIdx] = layoutRendered[peekIdx].concat(
+          layoutRendered[peekIdx].body = layoutRendered[peekIdx].body.concat(
             /*pageBreaker + */_layoutRenderedEachDoc
           )
         } else {
-          layoutRendered.push(_layoutRenderedEachDoc)
+          layoutRendered.push(doc)
         }
       } else {
-        layoutRendered.push(_layoutRenderedEachDoc)
+        layoutRendered.push(doc)
       }
-
       previousLayout = doc.layoutName
     }
 
     // Render base
     let baseRendered = []
     for (const each of layoutRendered) {
-      baseRendered.push(await this._renderDoc__base(each))
+      if (each.layoutName === Document.htmlDocumentIdentifier)
+        baseRendered.push(each.body)
+      else
+        baseRendered.push(await this._renderDoc__base(each.body))
     }
     if (options.writeHTMLOutput === true) {
       writeFile(`rendered_merged.html`, baseRendered.join(''))

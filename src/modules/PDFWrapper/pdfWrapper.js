@@ -1,6 +1,7 @@
 'use strict'
 import puppeteer from 'puppeteer'
 import { PDFDocument } from 'pdf-lib'
+import path from 'node:path'
 
 class PDFWrapper {
   constructor () {}
@@ -15,7 +16,15 @@ class PDFWrapper {
   }
   
   makePagePdf = async (str) => {
-    await this.page.setContent(str)
+    await this.page.setContent(str, { waitUntil: 'networkidle2' })
+    await this.page.waitForNetworkIdle()
+    return await this.page.pdf({ format: 'A4' })
+  }
+
+  makeFilePdf = async (filepath) => {
+    await this.page.goto(
+      `file:${path.join(path.resolve(), filepath)}`, { waitUntil: 'networkidle2' }
+    )
     await this.page.waitForNetworkIdle()
     return await this.page.pdf({ format: 'A4' })
   }
