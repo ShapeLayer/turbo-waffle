@@ -7,4 +7,17 @@ const entityCharToNormalChar = (text) => {
     .replaceAll('&quot;', '"')
 }
 
-export { entityCharToNormalChar }
+const removeFsReserved = (text) => {
+  return text
+    .replaceAll('/', '')
+    .replaceAll('<', '')
+    .replaceAll('>', '')
+    .replaceAll(':', '')
+    .replaceAll('"', '')
+    .replaceAll('\\', '')
+    .replaceAll('|', '')
+    .replaceAll('?', '')
+    .replaceAll('*', '')
+}
+
+export { entityCharToNormalChar, removeFsReserved }

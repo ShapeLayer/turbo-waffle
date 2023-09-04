@@ -8,6 +8,7 @@ import { TemplateRenderer } from './modules/Template/templateRenderer.js'
 import { PDFWrapper } from './modules/PDFWrapper/pdfWrapper.js'
 import { pageBreaker } from './utils/htmlElements.js'
 import { writeFile } from 'fs/promises'
+import { removeFsReserved } from './utils/string.js'
 
 class TurboWaffle {
   static defaults = {
@@ -84,7 +85,7 @@ class TurboWaffle {
       doc.body = _layoutRenderedEachDoc
       
       if (options.writeHTMLOutput === true) {
-        writeFile(`rendered_${doc.title}.html`, _layoutRenderedEachDoc)
+        writeFile(`rendered_${removeFsReserved(doc.title)}.html`, _layoutRenderedEachDoc)
       }
 
       // Compress compatible layouts
